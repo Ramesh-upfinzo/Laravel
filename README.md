@@ -199,3 +199,109 @@ php artisan migrate --force
 Test Again
 Visit your EC2 IP in the browser:
 http://your-IP
+--------------------------------------------------------
+
+Step 1: Launched EC2 Instance
+Created an Amazon EC2 instance using Amazon Linux 2023 AMI.
+
+Chose t2.micro instance (or other) and set up:
+
+Key Pair for SSH access
+
+Security Group allowing:
+
+SSH (port 22) — for terminal access
+
+HTTP (port 80) — for web server access
+
+(Optional) HTTPS (port 443) — for SSL later
+
+Step 2: Connected to the EC2 Instance via SSH
+Used the following command from local machine:
+ssh -i /path/to/your-key.pem ec2-user@<EC2-Public-IP>
+
+Step 3: Installed Required Software
+Installed all necessary packages for running Laravel:
+sudo yum update -y
+sudo yum install -y httpd git curl unzip php php-cli php-common php-mbstring php-xml php-bcmath php-pdo php-mysqlnd php-fpm php-opcache
+Installed Node.js and NPM:
+sudo dnf module enable nodejs:18 -y
+sudo dnf install -y nodejs
+Installed Composer:
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+Step 4: Cloned Laravel Project from Private GitHub Repo
+Cloned the Laravel project Laravel-Payvance:
+git clone git@github.com:your-username/your-private-repo.git Laravel-Payvance
+
+Step 5: Moved Laravel Code to Apache Directory
+Moved project to web root:
+sudo mv Laravel-Payvance /var/www/laravel
+cd /var/www/laravel
+
+Step 6: Installed Laravel Dependencies
+Installed PHP dependencies with Composer:
+composer install --no-dev --optimize-autoloader
+Installed frontend dependencies:
+npm install
+npm run build
+
+Step 7: Set Environment Configuration
+Copied and edited .env:
+cp .env.example .env
+nano .env
+Set values like:
+APP_NAME=Laravel
+APP_ENV=production
+APP_KEY=
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=StrongPass123!
+Generated application key:
+php artisan key:generate
+
+Step 8: Set File and Directory Permissions
+Laravel needs writable directories:
+sudo chown -R apache:apache /var/www/laravel
+sudo chmod -R 775 storage
+sudo chmod -R 775 bootstrap/cache
+
+Step 9: Configured Apache Virtual Host for Laravel
+Created config file:
+sudo nano /etc/httpd/conf.d/laravel.conf
+Added:
+<VirtualHost *:80>
+    DocumentRoot /var/www/laravel/public
+    <Directory /var/www/laravel/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+Enabled .htaccess:
+sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
+Restarted Apache:
+sudo systemctl restart httpd
+Step 10: Installed and Configured MariaDB (MySQL)
+Installed MariaDB:
+sudo dnf install -y mariadb105-server
+sudo systemctl enable mariadb
+sudo systemctl start mariadb
+Secured MariaDB:
+  sudo mysql_secure_installation
+Created Laravel DB and user:
+
+CREATE DATABASE laravel_db;
+CREATE USER 'laravel_user'@'localhost' IDENTIFIED BY 'StrongPass123!';
+GRANT ALL PRIVILEGES ON laravel_db.* TO 'laravel_user'@'localhost';
+FLUSH PRIVILEGES;
+
+Step 11: Ran Laravel Migrations
+php artisan migrate --force
+
+Step 12: Laravel App Live in Browser
+Visited:
+http://<your-ec2-public-ip>
