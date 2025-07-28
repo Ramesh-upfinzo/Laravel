@@ -32,6 +32,7 @@ sudo dnf install -y nodejs
 # Install Composer (PHP dependency manager)
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
 3. Clone Laravel App from Private Repo
 You can use SSH key or Personal Access Token to access your private repo:
 
@@ -44,10 +45,12 @@ Test GitHub access:
 ssh -T git@github.com
 Option B: Use Personal Access Token (alternative)
 git clone https://<username>:<token>@github.com/<username>/<repo>.git
+
 4. Move Laravel App to Web Directory
 cd /var/www
 sudo git clone git@github.com:your-username/your-laravel-repo.git laravel-app
 cd laravel-app
+
 5. Configure Laravel Environment
 Copy .env file:
 cp .env.example .env
@@ -55,22 +58,27 @@ Generate application key:
 php artisan key:generate
 Edit .env with DB and other environment details:
 nano .env
+
 6. Install Composer Dependencies
 composer install --no-dev --optimize-autoloader
+
 7. Install and Compile NPM Assets (if applicable)
 If your Laravel app uses Mix, Vite, or other frontend tooling:
 npm install
 npm run build   # or npm run prod
+
 8. Set Folder Permissions
 sudo chown -R apache:apache /var/www/laravel-app
 sudo chmod -R 775 /var/www/laravel-app/storage
 sudo chmod -R 775 /var/www/laravel-app/bootstrap/cache
+
 9. Set Up Apache for Laravel
 Edit Apache config:
 sudo nano /etc/httpd/conf.d/laravel.conf
 sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
 Restart Apache:
 sudo systemctl restart httpd
+
 10. Test Laravel Application
 Open your browser:
 http://<your-ec2-public-ip>/
