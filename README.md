@@ -118,14 +118,16 @@ DB_PORT=3306
 DB_DATABASE=your_db
 DB_USERNAME=your_user
 DB_PASSWORD=your_password
-4. Generate Laravel App Key
 
+4. Generate Laravel App Key
 php artisan key:generate
+
 5. Set Correct Permissions
 Laravel needs proper permissions for storage and bootstrap/cache:
 sudo chown -R apache:apache /var/www/laravel
 sudo chmod -R 775 storage
 sudo chmod -R 775 bootstrap/cache
+
 6. Configure Apache to Serve Laravel App
 Create an Apache config file:
 sudo nano /etc/httpd/conf.d/laravel.conf
@@ -141,10 +143,12 @@ Enable .htaccess support:
 sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
 Restart Apache:
 sudo systemctl restart httpd
+
 7. Compile Frontend Assets
 If your project uses Vite or Laravel Mix (check vite.config.js or webpack.mix.js), run:
 npm install
 npm run build
+
 8. Access Your App
 Now open your browser and go to:
 http://<your-ec2-public-ip>/
