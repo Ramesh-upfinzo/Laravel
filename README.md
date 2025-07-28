@@ -5,7 +5,7 @@ Go to the AWS EC2 dashboard and launch a new instance:
 
 AMI: Amazon Linux 2023
 
-Instance Type: t2.micro
+Instance Type: As per the requirement
 
 Allow inbound rules for SSH (22), HTTP (80), and HTTPS (443) in security group
 
