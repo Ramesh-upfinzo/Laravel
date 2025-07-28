@@ -265,26 +265,27 @@ Generated application key:
 php artisan key:generate
 
 Step 8: Set File and Directory Permissions
-Laravel needs writable directories:
-sudo chown -R apache:apache /var/www/laravel
-sudo chmod -R 775 storage
-sudo chmod -R 775 bootstrap/cache
+  Laravel needs writable directories:
+  sudo chown -R apache:apache /var/www/laravel
+  sudo chmod -R 775 storage
+  sudo chmod -R 775 bootstrap/cache
 
 Step 9: Configured Apache Virtual Host for Laravel
-Created config file:
-sudo nano /etc/httpd/conf.d/laravel.conf
-Added:
-<VirtualHost *:80>
-    DocumentRoot /var/www/laravel/public
-    <Directory /var/www/laravel/public>
-        AllowOverride All
-        Require all granted
-    </Directory>
-</VirtualHost>
-Enabled .htaccess:
-sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
-Restarted Apache:
-sudo systemctl restart httpd
+  Created config file:
+  sudo nano /etc/httpd/conf.d/laravel.conf
+  Added:
+  <VirtualHost *:80>
+      DocumentRoot /var/www/laravel/public
+      <Directory /var/www/laravel/public>
+          AllowOverride All
+          Require all granted
+      </Directory>
+  </VirtualHost>
+  Enabled .htaccess:
+  sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
+  Restarted Apache:
+  sudo systemctl restart httpd
+
 Step 10: Installed and Configured MariaDB (MySQL)
 Installed MariaDB:
 sudo dnf install -y mariadb105-server
