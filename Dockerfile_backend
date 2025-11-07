@@ -1,0 +1,19 @@
+FROM node:22-alpine
+WORKDIR /app
+
+# Copy only backend files
+COPY package*.json ./
+RUN npm install --only=production
+
+# Copy your backend source files
+COPY . .
+
+# Environment variables
+ENV NODE_ENV=production
+ENV PORT=5000
+
+EXPOSE 5000
+
+# Start backend server
+CMD ["npm", "run", "server"]
+
